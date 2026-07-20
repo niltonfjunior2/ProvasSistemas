@@ -7,12 +7,12 @@ export function NextExamAlert({ exam }: { exam: Prova | null }) {
   if (!exam) return null
 
   const dateObj = new Date(exam.data_hora_inicio)
-  const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC', weekday: 'long', day: '2-digit', month: 'long' })
-  const formattedTime = dateObj.toLocaleTimeString('pt-BR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' })
+  const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', weekday: 'long', day: '2-digit', month: 'long' })
+  const formattedTime = dateObj.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' })
 
   return (
-    <Card className="border-l-4 border-l-secondary shadow-md bg-secondary/5">
-      <CardHeader className="p-3 pb-0">
+    <Card className="border-l-4 border-l-secondary shadow-md bg-secondary/5 [--card-spacing:0.5rem]">
+      <CardHeader className="pb-0">
         <div className="flex justify-between items-start">
           <div>
             <CardDescription className="text-secondary font-semibold uppercase tracking-wider text-xs mb-1">
@@ -25,7 +25,7 @@ export function NextExamAlert({ exam }: { exam: Prova | null }) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="p-3 pt-1">
+      <CardContent className="pt-1">
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
           <div className="flex items-center text-xs text-muted-foreground gap-1">
             <CalendarDays className="h-4 w-4 text-secondary" />

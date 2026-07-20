@@ -132,7 +132,7 @@ export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAv
 
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="data_hora_inicio" className="text-right">Data/Hora</Label>
-                  <Input id="data_hora_inicio" name="data_hora_inicio" type="datetime-local" className="col-span-3" defaultValue={editingItem ? new Date(new Date(editingItem.data_hora_inicio).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} required />
+                  <Input id="data_hora_inicio" name="data_hora_inicio" type="datetime-local" className="col-span-3" defaultValue={editingItem ? new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(editingItem.data_hora_inicio)).replace(' ', 'T') : ''} required />
                 </div>
 
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -169,8 +169,8 @@ export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAv
             ) : (
               provas.map((p) => {
                 const dateObj = new Date(p.data_hora_inicio)
-                const formattedDate = dateObj.toLocaleDateString('pt-BR')
-                const formattedTime = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+                const formattedTime = dateObj.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' })
                 
                 return (
                   <TableRow key={p.id}>

@@ -20,8 +20,8 @@ export async function addProva(formData: FormData) {
     disciplina_id: formData.get('disciplina_id'),
     professor_id: formData.get('professor_id'),
     turma_id: formData.get('turma_id'),
-    // Convert to ISO-8601 for DB and Zod
-    data_hora_inicio: new Date(formData.get('data_hora_inicio') as string).toISOString(),
+    // Força timezone BRT (-03:00) para garantir que 19:00 seja 19:00 no Brasil, ignorando se o Node roda em UTC na Vercel
+    data_hora_inicio: new Date(`${formData.get('data_hora_inicio')}:00-03:00`).toISOString(),
     tipo_avaliacao: formData.get('tipo_avaliacao'),
     observacoes: formData.get('observacoes') || '',
   }
@@ -80,7 +80,7 @@ export async function editProva(formData: FormData) {
     disciplina_id: formData.get('disciplina_id'),
     professor_id: formData.get('professor_id'),
     turma_id: formData.get('turma_id'),
-    data_hora_inicio: new Date(formData.get('data_hora_inicio') as string).toISOString(),
+    data_hora_inicio: new Date(`${formData.get('data_hora_inicio')}:00-03:00`).toISOString(),
     tipo_avaliacao: formData.get('tipo_avaliacao'),
     observacoes: formData.get('observacoes') || '',
   }

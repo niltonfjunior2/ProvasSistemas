@@ -64,12 +64,12 @@ export function ExamBoard({ exams, turmas }: { exams: Prova[], turmas: Turma[] }
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredExams.map((exam) => {
               const dateObj = new Date(exam.data_hora_inicio)
-              const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: '2-digit' })
-              const formattedTime = dateObj.toLocaleTimeString('pt-BR', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' })
+              const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit' })
+              const formattedTime = dateObj.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' })
 
               return (
-                <Card key={exam.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="p-3 pb-0">
+                <Card key={exam.id} className="hover:shadow-md transition-shadow [--card-spacing:0.5rem]">
+                  <CardHeader className="pb-0">
                     <div className="flex justify-between items-start gap-2">
                       <CardTitle className="text-base leading-tight line-clamp-2">
                         {exam.disciplinas?.nome}
@@ -80,7 +80,7 @@ export function ExamBoard({ exams, turmas }: { exams: Prova[], turmas: Turma[] }
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-3 pt-1 text-xs text-muted-foreground">
+                  <CardContent className="pt-1 text-xs text-muted-foreground">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-medium text-foreground">{exam.turmas?.nome}</span>
                       <Badge variant="outline">{exam.tipo_avaliacao}</Badge>
