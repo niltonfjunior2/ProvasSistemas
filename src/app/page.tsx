@@ -24,13 +24,30 @@ export default async function PublicHome() {
   const today = new Date()
   today.setUTCHours(0,0,0,0)
 
-  const { data: exams } = await supabase
+  const { data: rawExams } = await supabase
     .from('provas')
     .select('*, disciplinas(nome), professores(nome), turmas(nome)')
     .gte('data_hora_inicio', today.toISOString())
-    .order('data_hora_inicio', { ascending: true })
 
-  const nextExam = exams && exams.length > 0 ? exams[0] : null
+  let exams = rawExams || []
+  exams.sort((a, b) => {
+    // 1. Data da Prova (ascendente)
+    if (a.data_hora_inicio !== b.data_hora_inicio) {
+      return new Date(a.data_hora_inicio).getTime() - new Date(b.data_hora_inicio).getTime()
+    }
+    // 2. Turma (alfabética)
+    const turmaA = a.turmas?.nome || ''
+    const turmaB = b.turmas?.nome || ''
+    if (turmaA !== turmaB) {
+      return turmaA.localeCompare(turmaB, 'pt-BR')
+    }
+    // 3. Disciplina (alfabética)
+    const discA = a.disciplinas?.nome || ''
+    const discB = b.disciplinas?.nome || ''
+    return discA.localeCompare(discB, 'pt-BR')
+  })
+
+  const nextExam = exams.length > 0 ? exams[0] : null
 
   return (
     <div className="min-h-screen bg-muted/20 pb-12 transition-colors duration-300">
@@ -48,8 +65,7 @@ export default async function PublicHome() {
       <main className="max-w-5xl mx-auto px-4 mt-8 space-y-8">
         {/* Alerta da Próxima Prova */}
         <section>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <h2 className="text-xl font-bold">Quadro de Avisos</h2>
+          <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 mb-4">
             {documentos && documentos.length > 0 && (
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 {documentos.map((doc) => (
