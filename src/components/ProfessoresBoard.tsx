@@ -60,7 +60,7 @@ export function ProfessoresBoard({ provas }: ProfessoresBoardProps) {
   return (
     <Card className="shadow-lg border-2 border-secondary/20 bg-white/95 backdrop-blur-sm">
       <CardContent className="pt-6">
-        <Accordion type="multiple" className="w-full space-y-4">
+        <Accordion className="w-full space-y-4">
           {professorGroups.map(group => (
             <AccordionItem key={group.id} value={group.id} className="border rounded-lg px-4 bg-muted/10">
               <AccordionTrigger className="hover:no-underline">
