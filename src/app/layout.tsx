@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { createClient } from '@/utils/supabase/server'
@@ -16,6 +16,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Calendário de Provas - SI UEMG",
   description: "Sistema institucional de consulta ao calendário de avaliações",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Provas SI",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0f172a',
 };
 
 export default async function RootLayout({
