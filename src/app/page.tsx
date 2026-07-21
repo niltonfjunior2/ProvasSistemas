@@ -1,3 +1,4 @@
+import { InstallPWA } from '@/components/InstallPWA'
 import { createClient } from '@/utils/supabase/server'
 import { ExamBoard } from '@/components/ExamBoard'
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,7 @@ export default async function PublicHome() {
         <section>
           <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 mb-4">
             <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+              <InstallPWA />
               {documentos && documentos.length > 0 && documentos.map((doc) => (
                 <Button key={doc.id} render={<a href={doc.url} target="_blank" rel="noopener noreferrer" />} variant="outline" className="w-full sm:w-auto gap-2 border-primary/20 hover:bg-primary/5 text-primary">
                   <FileDown className="h-4 w-4" />
