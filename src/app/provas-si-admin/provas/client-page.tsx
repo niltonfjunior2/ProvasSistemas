@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,10 +10,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { addProva, deleteProva, editProva } from './actions'
 import { Prova, Disciplina, Professor, Turma, TipoAvaliacao } from '@/types'
 
-export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAvaliacao }: { provas: Prova[], disciplinas: Disciplina[], professores: Professor[], turmas: Turma[], tiposAvaliacao: TipoAvaliacao[] }) {
+export function ProvasClient({ provas, disciplinas, turmas, tiposAvaliacao }: { provas: Prova[], disciplinas: Disciplina[], turmas: Turma[], tiposAvaliacao: TipoAvaliacao[] }) {
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [editingItem, setEditingItem] = useState<Prova | null>(null)
+  const [selectedTurmaId, setSelectedTurmaId] = useState<string>('')
+  const [selectedDisciplinaId, setSelectedDisciplinaId] = useState<string>('')
+
+  useEffect(() => {
+    if (editingItem) {
+      setSelectedTurmaId(editingItem.turma_id)
+      setSelectedDisciplinaId(editingItem.disciplina_id)
+    } else {
+      setSelectedTurmaId('')
+      setSelectedDisciplinaId('')
+    }
+  }, [editingItem])
 
   async function handleAddOrEdit(formData: FormData) {
     setError(null)
@@ -68,11 +80,9 @@ export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAv
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label className="text-right">Turma</Label>
                   <div className="col-span-3">
-                    <Select name="turma_id" required defaultValue={editingItem?.turma_id || undefined}>
+                    <Select name="turma_id" required value={selectedTurmaId || undefined} onValueChange={(val) => { setSelectedTurmaId(val); setSelectedDisciplinaId(''); }}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione a turma">
-                          {(val: string) => val ? (turmas.find(t => t.id === val)?.nome || val) : "Selecione a turma"}
-                        </SelectValue>
+                        <SelectValue placeholder="Selecione a turma" />
                       </SelectTrigger>
                       <SelectContent>
                         {turmas.map(t => (
@@ -86,33 +96,13 @@ export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAv
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label className="text-right">Disciplina</Label>
                   <div className="col-span-3">
-                    <Select name="disciplina_id" required defaultValue={editingItem?.disciplina_id || undefined}>
+                    <Select name="disciplina_id" required value={selectedDisciplinaId || undefined} onValueChange={setSelectedDisciplinaId} disabled={!selectedTurmaId}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione a disciplina">
-                          {(val: string) => val ? (disciplinas.find(d => d.id === val)?.nome || val) : "Selecione a disciplina"}
-                        </SelectValue>
+                        <SelectValue placeholder="Selecione a disciplina" />
                       </SelectTrigger>
                       <SelectContent>
-                        {disciplinas.map(d => (
+                        {disciplinas.filter(d => d.turma_id === selectedTurmaId).map(d => (
                           <SelectItem key={d.id} value={d.id}>{d.nome}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label className="text-right">Professor</Label>
-                  <div className="col-span-3">
-                    <Select name="professor_id" required defaultValue={editingItem?.professor_id || undefined}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o professor">
-                          {(val: string) => val ? (professores.find(p => p.id === val)?.nome || val) : "Selecione o professor"}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {professores.map(p => (
-                          <SelectItem key={p.id} value={p.id}>{p.nome}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -183,7 +173,7 @@ export function ProvasClient({ provas, disciplinas, professores, turmas, tiposAv
                     </TableCell>
                     <TableCell>{p.turmas?.nome || '-'}</TableCell>
                     <TableCell>{p.disciplinas?.nome || '-'}</TableCell>
-                    <TableCell>{p.professores?.nome || '-'}</TableCell>
+                    <TableCell>{p.disciplinas?.professores?.nome || '-'}</TableCell>
                     <TableCell>{p.tipo_avaliacao}</TableCell>
                     <TableCell>
                       <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset bg-blue-50 text-blue-700 ring-blue-700/10">

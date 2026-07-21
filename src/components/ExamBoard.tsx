@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Search } from 'lucide-react'
 import { Prova, Turma } from '@/types'
 import { NextExamAlert } from '@/components/NextExamAlert'
@@ -21,7 +22,7 @@ export function ExamBoard({ exams, turmas }: { exams: Prova[], turmas: Turma[] }
   const filteredExams = useMemo(() => {
     return exams.filter((exam) => {
       const matchSearch = exam.disciplinas?.nome?.toLowerCase().includes(search.toLowerCase()) || 
-                          exam.professores?.nome?.toLowerCase().includes(search.toLowerCase())
+                          exam.disciplinas?.professores?.nome?.toLowerCase().includes(search.toLowerCase())
       const matchTurma = turmaFilter === 'todas' || exam.turma_id === turmaFilter
       const matchTipo = tipoFilter === 'todos' || exam.tipo_avaliacao === tipoFilter
       return matchSearch && matchTurma && matchTipo
@@ -47,42 +48,55 @@ export function ExamBoard({ exams, turmas }: { exams: Prova[], turmas: Turma[] }
       {/* Filters */}
       <div className="bg-card p-4 rounded-xl shadow-sm border space-y-4">
         <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Filtros de Busca</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="relative">
+        <div className="flex flex-col md:flex-row gap-4 md:items-center">
+          <div className="relative flex-grow">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Buscar disciplina ou professor..." 
-              className="pl-9"
+              className="pl-9 w-full"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <Select value={turmaFilter} onValueChange={(val) => setTurmaFilter(val || 'todas')}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todas as turmas">
-                {turmaFilter === 'todas' ? 'Todas as turmas' : turmas.find(t => t.id === turmaFilter)?.nome}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todas as turmas</SelectItem>
-              {turmas.map(t => (
-                <SelectItem key={t.id} value={t.id}>{t.nome}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={tipoFilter} onValueChange={(val) => setTipoFilter(val || 'todos')}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todos os tipos">
-                {tipoFilter === 'todos' ? 'Todos os tipos' : tipoFilter}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os tipos</SelectItem>
-              {tiposAvaliacao.map(t => (
-                <SelectItem key={t} value={t}>{t}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+            <div className="w-full sm:w-48">
+              <Select value={turmaFilter} onValueChange={(val) => setTurmaFilter(val || 'todas')}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas as turmas">
+                    {turmaFilter === 'todas' ? 'Todas as turmas' : turmas.find(t => t.id === turmaFilter)?.nome}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todas">Todas as turmas</SelectItem>
+                  {turmas.map(t => (
+                    <SelectItem key={t.id} value={t.id}>{t.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-full sm:w-48">
+              <Select value={tipoFilter} onValueChange={(val) => setTipoFilter(val || 'todos')}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todos os tipos">
+                    {tipoFilter === 'todos' ? 'Todos os tipos' : tipoFilter}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos os tipos</SelectItem>
+                  {tiposAvaliacao.map(t => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => { setSearch(''); setTurmaFilter('todas'); setTipoFilter('todos') }}
+              className="w-full sm:w-auto whitespace-nowrap"
+            >
+              Limpar filtros
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -120,7 +134,7 @@ export function ExamBoard({ exams, turmas }: { exams: Prova[], turmas: Turma[] }
                       <span className="font-medium text-foreground">{exam.turmas?.nome}</span>
                       <Badge variant="outline">{exam.tipo_avaliacao}</Badge>
                     </div>
-                    <div>Prof. {exam.professores?.nome}</div>
+                    <div>Prof. {exam.disciplinas?.professores?.nome || '-'}</div>
                     {exam.observacoes && (
                       <div className="text-[11px] bg-muted p-1.5 mt-1 rounded truncate leading-tight font-bold text-foreground border" title={exam.observacoes}>
                         Obs: {exam.observacoes}

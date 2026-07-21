@@ -6,7 +6,6 @@ import { z } from 'zod'
 
 const provaSchema = z.object({
   disciplina_id: z.string().uuid({ message: "Disciplina inválida" }),
-  professor_id: z.string().uuid({ message: "Professor inválido" }),
   turma_id: z.string().uuid({ message: "Turma inválida" }),
   data_hora_inicio: z.string().datetime({ message: "Data e hora inválidas" }),
   tipo_avaliacao: z.string().min(1, { message: "Tipo de avaliação obrigatório" }),
@@ -18,7 +17,6 @@ export async function addProva(formData: FormData) {
   
   const rawData = {
     disciplina_id: formData.get('disciplina_id'),
-    professor_id: formData.get('professor_id'),
     turma_id: formData.get('turma_id'),
     // Força timezone BRT (-03:00) para garantir que 19:00 seja 19:00 no Brasil, ignorando se o Node roda em UTC na Vercel
     data_hora_inicio: new Date(`${formData.get('data_hora_inicio')}:00-03:00`).toISOString(),
@@ -79,7 +77,6 @@ export async function editProva(formData: FormData) {
 
   const rawData = {
     disciplina_id: formData.get('disciplina_id'),
-    professor_id: formData.get('professor_id'),
     turma_id: formData.get('turma_id'),
     data_hora_inicio: new Date(`${formData.get('data_hora_inicio')}:00-03:00`).toISOString(),
     tipo_avaliacao: formData.get('tipo_avaliacao'),

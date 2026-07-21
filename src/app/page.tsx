@@ -25,7 +25,7 @@ export default async function PublicHome() {
 
   const { data: rawExams } = await supabase
     .from('provas')
-    .select('*, disciplinas(nome), professores(nome), turmas(nome)')
+    .select('*, disciplinas(nome, professores(nome)), turmas(nome)')
     .gte('data_hora_inicio', today.toISOString())
 
   let exams = rawExams || []
@@ -61,9 +61,9 @@ export default async function PublicHome() {
 
       <main className="max-w-5xl mx-auto px-4 mt-8 space-y-8">
         {/* Alerta da Próxima Prova */}
-        <section>
-          <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 mb-4">
-            {documentos && documentos.length > 0 && (
+        {documentos && documentos.length > 0 && (
+          <section>
+            <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 mb-4">
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 {documentos.map((doc) => (
                   <Button key={doc.id} render={<a href={doc.url} target="_blank" rel="noopener noreferrer" />} variant="outline" className="w-full sm:w-auto gap-2 border-primary/20 hover:bg-primary/5 text-primary">
@@ -72,9 +72,9 @@ export default async function PublicHome() {
                   </Button>
                 ))}
               </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
 
         {/* Board de Filtros e Listagem */}
         <section>
