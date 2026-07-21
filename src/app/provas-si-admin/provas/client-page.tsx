@@ -82,7 +82,9 @@ export function ProvasClient({ provas, disciplinas, turmas, tiposAvaliacao }: { 
                   <div className="col-span-3">
                     <Select name="turma_id" required value={selectedTurmaId || undefined} onValueChange={(val) => { setSelectedTurmaId(val || ''); setSelectedDisciplinaId(''); }}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione a turma" />
+                        <SelectValue placeholder="Selecione a turma">
+                          {selectedTurmaId ? turmas.find(t => t.id === selectedTurmaId)?.nome : undefined}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {turmas.map(t => (
@@ -98,7 +100,9 @@ export function ProvasClient({ provas, disciplinas, turmas, tiposAvaliacao }: { 
                   <div className="col-span-3">
                     <Select name="disciplina_id" required value={selectedDisciplinaId || undefined} onValueChange={(val) => setSelectedDisciplinaId(val || '')} disabled={!selectedTurmaId}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione a disciplina" />
+                        <SelectValue placeholder="Selecione a disciplina">
+                          {selectedDisciplinaId ? disciplinas.find(d => d.id === selectedDisciplinaId)?.nome : undefined}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {disciplinas.filter(d => d.turma_id === selectedTurmaId).map(d => (
